@@ -1,0 +1,17 @@
+# Virtual environment
+ai_gym_trainer_311/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env/
+
+# Streamlit secrets
+.streamlit/
+
+# Database
+*.db
