@@ -1,17 +1,23 @@
-# Virtual environment
-ai_gym_trainer_311/
-venv/
-
-# Python cache
+# Python
 __pycache__/
 *.pyc
 
-# Environment variables
-.env
+# Virtual environment
+venv/
 .env/
-
-# Streamlit secrets
-.streamlit/
+.env
+# OS files
+.DS_Store
+Thumbs.db
 
 # Database
-*.db
+Main App/data.db
+
+# Logs
+*.log
+.streamlit/
+gymenv
+data.db
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,4 +1,5 @@
 import time
+import base64
 import streamlit as st
 
 
@@ -15,7 +16,7 @@ class VoicePipeline:
         if exercise == "Squats":
             depth = metrics.get("depth_status", "")
             back_angle = metrics.get("back_angle", 180)
-            
+
             if depth == "TOO HIGH":
                 return "The user's squat is not deep enough — knees are not bending sufficiently."
 
@@ -25,7 +26,7 @@ class VoicePipeline:
         elif exercise == "Push-ups":
             alignment = metrics.get("body_alignment", "")
             hip_status = metrics.get("hip_status", "")
-            
+
             if alignment == "Poor Form":
                 return "The user's body is not straight during the push-up."
 
@@ -38,7 +39,7 @@ class VoicePipeline:
         elif exercise == "Biceps Curls (Dumbbell)":
             swing = metrics.get("swing_status", "")
             shoulder = metrics.get("shoulder_status", "")
-            
+
             if swing == "SWINGING":
                 return "The user is swinging their torso during the curl — keep the body still."
 
@@ -48,7 +49,7 @@ class VoicePipeline:
         elif exercise == "Shoulder Press":
             back_arch = metrics.get("back_arch_status", "")
             extension = metrics.get("extension_status", "")
-            
+
             if back_arch == "Excessive Arch":
                 return "The user is arching their lower back excessively during the press."
 
@@ -57,7 +58,7 @@ class VoicePipeline:
 
         elif exercise == "Lunges":
             balance = metrics.get("balance_status", "")
-            
+
             if balance == "OFF BALANCE":
                 return "The user is losing balance during the lunge — feet should be hip-width apart."
 
@@ -65,7 +66,6 @@ class VoicePipeline:
 
     def process_event(self, event, exercise, metrics):
         issue = self._find_form_issue(exercise, metrics)
-
         now = time.time()
 
         is_major_issue = event in ["workout_started", "set_completed", "workout_completed"]
@@ -73,22 +73,36 @@ class VoicePipeline:
         if not is_major_issue:
             if not issue:
                 return None
-            
+
+            # Prevent spamming feedback too frequently
             if now - self.last_spoken_at < 5:
                 return None
-            
+
+        # Generate feedback text
         text = self.llm.give_feedback(event, issue)
-        voice = self.tts.speak(text)
+
+        # Generate audio (TTS should return raw MP3 bytes)
+        audio_bytes = self.tts.speak(text)
 
         self.last_spoken_at = now
 
-        return voice, text
-    
+        # Play audio immediately
+        autoplay_audio(audio_bytes)
+
+        return audio_bytes, text
+
 
 def autoplay_audio(audio_bytes):
     if not audio_bytes:
         return
-    
-    st.markdown("<style>[data-testid='stAudio'] {display: none;}</style>", unsafe_allow_html=True)
-    
-    st.audio(audio_bytes, format="audio/mp3", autoplay=True)
+
+    # Convert bytes to base64 for embedding
+    b64 = base64.b64encode(audio_bytes).decode()
+
+    # Inject HTML audio player with autoplay
+    md = f"""
+        <audio autoplay>
+        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+        </audio>
+    """
+    st.markdown(md, unsafe_allow_html=True)
