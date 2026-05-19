@@ -1,6 +1,6 @@
 streamlit==1.33.0
 streamlit-webrtc==0.45.0
-mediapipe==0.10.9
+mediapipe==0.10.8
 opencv-python-headless==4.9.0.80
 pandas==2.2.2
 groq>=0.12.0
