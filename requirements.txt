@@ -8,3 +8,4 @@ gtts==2.5.3
 python-dotenv==1.0.1
 av==9.2.0
 numpy==1.26.4
+Cython==0.29.36
