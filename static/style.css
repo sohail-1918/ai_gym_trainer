@@ -244,3 +244,23 @@ tbody tr td {
     color: #ffffff !important;
     font-size: 16px !important;
 }
+/* =========================================================
+   HEADINGS FIX
+========================================================= */
+
+[data-testid="stMarkdownContainer"] h1 {
+    color: #FFFFFF !important;   /* pure white */
+    font-weight: 700 !important; /* bold */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); /* subtle glow */
+    letter-spacing: 1px !important;
+}
+
+[data-testid="stMarkdownContainer"] h2 {
+    color: #E0E0E0 !important;   /* slightly softer white */
+    font-weight: 600 !important;
+}
+
+[data-testid="stMarkdownContainer"] h3 {
+    color: #B0B0B0 !important;   /* dimmer but readable */
+    font-weight: 500 !important;
+}
